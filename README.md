@@ -112,7 +112,8 @@ tests/                     Mirrors src/, unit + integration tests
 
 ## What's deliberately not here yet
 
-Online payments, booking/availability, itineraries and invoicing are a
+Online payments, real-time booking/availability, and invoicing are a
 separate, later phase. See the project's WRD and proposal documents for the
-full roadmap — this build is scoped to the trust-building public site plus
-its admin panel, nothing more.
+full roadmap — this build covers the full public site (packages, itineraries,
+about, contact) and its admin panel, with enquiries as lead-capture only —
+no payment gateway or booking engine yet.
