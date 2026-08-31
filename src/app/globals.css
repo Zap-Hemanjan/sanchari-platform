@@ -6,6 +6,10 @@
   --background: #ffffff;
   --foreground: #171717;
   color-scheme: light;
+  scroll-behavior: smooth;
+  /* Keeps section headings clear of the sticky header when a nav link
+     scrolls the page to an in-page anchor. */
+  scroll-padding-top: 72px;
 }
 
 body {
