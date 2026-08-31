@@ -10,6 +10,10 @@ type Inquiry = {
   message: string;
   status: string;
   createdAt: string;
+  packageTitle: string | null;
+  adults: number | null;
+  children: number | null;
+  country: string | null;
 };
 
 export function InquiryManager({ initialInquiries }: { initialInquiries: Inquiry[] }) {
@@ -39,6 +43,15 @@ export function InquiryManager({ initialInquiries }: { initialInquiries: Inquiry
                 {inquiry.name} <span className="font-normal text-slate-500">({inquiry.email})</span>
               </p>
               <p className="mt-1 text-sm text-slate-600">{inquiry.message}</p>
+              {inquiry.packageTitle && (
+                <p className="mt-1 text-xs font-medium text-terracotta">
+                  Package: {inquiry.packageTitle}
+                  {(inquiry.adults ?? 0) > 0 || (inquiry.children ?? 0) > 0
+                    ? ` — ${inquiry.adults ?? 0} adult(s), ${inquiry.children ?? 0} child(ren)`
+                    : ""}
+                  {inquiry.country ? ` — ${inquiry.country}` : ""}
+                </p>
+              )}
               <p className="mt-1 text-xs text-slate-400">
                 {new Date(inquiry.createdAt).toLocaleString()} - {inquiry.status}
               </p>

@@ -10,6 +10,14 @@ export async function resetDb() {
   await prisma.mediaAsset.deleteMany();
   await prisma.testimonial.deleteMany();
   await prisma.category.deleteMany();
+  await prisma.itineraryDay.deleteMany();
+  await prisma.packageInclusion.deleteMany();
+  await prisma.packageHighlight.deleteMany();
+  await prisma.package.deleteMany();
+  await prisma.destination.deleteMany();
+  await prisma.valueProp.deleteMany();
+  await prisma.faq.deleteMany();
+  await prisma.newsletterSubscriber.deleteMany();
   await prisma.siteSettings.deleteMany();
   await prisma.adminUser.deleteMany();
 }

@@ -43,6 +43,23 @@ describe("public inquiry submission", () => {
     );
     expect(response.status).toBe(400);
   });
+
+  it("accepts package context fields from a package detail page's enquiry form", async () => {
+    const response = await submitInquiry(
+      jsonRequest("http://localhost/api/inquiries", "POST", {
+        name: "Priya",
+        email: "priya@example.com",
+        message: "Interested.",
+        packageTitle: "Tamil Nadu Temple Journey",
+        adults: 2,
+        children: 0,
+        country: "United States",
+      }),
+    );
+    expect(response.status).toBe(201);
+    const body = await response.json();
+    expect(body.packageTitle).toBe("Tamil Nadu Temple Journey");
+  });
 });
 
 describe("/api/admin/inquiries", () => {

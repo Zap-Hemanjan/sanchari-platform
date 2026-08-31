@@ -8,10 +8,16 @@ import { LogoutButton } from "@/components/admin/logout-button";
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/hero", label: "Hero" },
+  { href: "/admin/settings", label: "Settings" },
   { href: "/admin/categories", label: "Categories" },
+  { href: "/admin/packages", label: "Packages" },
+  { href: "/admin/destinations", label: "Destinations" },
+  { href: "/admin/value-props", label: "Value Props" },
   { href: "/admin/testimonials", label: "Testimonials" },
+  { href: "/admin/faqs", label: "FAQs" },
   { href: "/admin/gallery", label: "Gallery" },
   { href: "/admin/inquiries", label: "Inquiries" },
+  { href: "/admin/newsletter", label: "Newsletter" },
 ];
 
 // This layout is the real auth gate (Node runtime, can use Prisma).

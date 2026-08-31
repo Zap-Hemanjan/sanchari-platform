@@ -7,6 +7,11 @@ export const inquiryInputSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
   email: z.string().trim().email("A valid email is required"),
   message: z.string().trim().min(1, "Message is required"),
+  // Populated only when submitted from a package detail page's enquiry form.
+  packageTitle: z.string().trim().min(1).nullish(),
+  adults: z.number().int().nonnegative().nullish(),
+  children: z.number().int().nonnegative().nullish(),
+  country: z.string().trim().min(1).nullish(),
 });
 
 export const inquiryStatusSchema = z.enum(INQUIRY_STATUSES);

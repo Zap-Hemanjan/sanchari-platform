@@ -60,4 +60,21 @@ describe("inquiry content repository", () => {
       markInquiryStatus(inquiry.id, "not-a-real-status"),
     ).rejects.toThrow();
   });
+
+  it("stores optional package context fields when submitted from a package page", async () => {
+    const inquiry = await createInquiry({
+      name: "Priya",
+      email: "priya@example.com",
+      message: "Interested.",
+      packageTitle: "Tamil Nadu Temple Journey",
+      adults: 2,
+      children: 1,
+      country: "United States",
+    });
+
+    expect(inquiry.packageTitle).toBe("Tamil Nadu Temple Journey");
+    expect(inquiry.adults).toBe(2);
+    expect(inquiry.children).toBe(1);
+    expect(inquiry.country).toBe("United States");
+  });
 });

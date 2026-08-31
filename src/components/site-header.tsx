@@ -2,12 +2,19 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const NAV_LINKS = [
-  { href: "#categories", label: "Our Packages" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#plan-your-journey", label: "Contact Us" },
+  { href: "/our-packages", label: "Our Packages" },
+  { href: "/about-us", label: "About Us" },
+  { href: "/#gallery", label: "Gallery" },
+  { href: "/contact-us", label: "Contact Us" },
 ];
+
+// Matches the live site's own real business WhatsApp number — "Book Your
+// Tour" is a WhatsApp deep link there too, not an internal booking flow
+// (the site has no online payment/booking anywhere).
+const WHATSAPP_URL = "https://wa.me/917337428436?text=Hello%20I%20would%20like%20to%20know%20more.";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -15,7 +22,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 bg-terracotta text-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <a href="#top" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <Image
             src="/sanchari-logo.webp"
             alt="Sanchari"
@@ -25,22 +32,24 @@ export function SiteHeader() {
             priority
             className="h-8 w-auto sm:h-9"
           />
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-sm font-medium transition hover:text-white/80"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <a
-          href="#plan-your-journey"
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="hidden items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-medium text-navy transition hover:bg-white/90 md:inline-flex"
         >
           Book Your Tour <span aria-hidden>&rarr;</span>
@@ -63,17 +72,19 @@ export function SiteHeader() {
         <div className="border-t border-white/20 md:hidden">
           <nav className="flex flex-col px-4 py-3">
             {NAV_LINKS.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="py-2 text-sm font-medium"
                 onClick={() => setOpen(false)}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
             <a
-              href="#plan-your-journey"
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-2 rounded-full bg-white px-5 py-2 text-center text-sm font-medium text-navy"
               onClick={() => setOpen(false)}
             >

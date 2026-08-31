@@ -65,13 +65,25 @@ model LoginAttempt {
   @@index([identifier, attemptedAt])
 }
 
-// Singleton row (id is always "singleton") holding homepage hero content.
+// Singleton row (id is always "singleton") holding homepage hero content,
+// site-wide stats and contact details.
 model SiteSettings {
   id              String @id @default("singleton")
   heroHeadline    String
   heroSubheadline String
   heroImageUrl    String?
-  updatedAt       DateTime @updatedAt
+
+  statsYears        Int?
+  statsTravelers    Int?
+  statsDestinations Int?
+  statsSatisfaction Int?
+
+  contactPhone    String?
+  contactEmail    String?
+  contactLocation String?
+  contactHours    String?
+
+  updatedAt DateTime @updatedAt
 }
 
 // The 3 pillars: Temple Tourism / Adventure / Wellness.
@@ -110,5 +122,100 @@ model Inquiry {
   email     String
   message   String
   status    String   @default("new")
+  createdAt DateTime @default(now())
+
+  // Populated when submitted from a package detail page's enquiry form;
+  // null for the general homepage/contact-us contact form.
+  packageTitle String?
+  adults       Int?
+  children     Int?
+  country      String?
+}
+
+model Package {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  title       String
+  duration    String
+  destination String
+  heroImageUrl String?
+  description String
+  published   Boolean @default(true)
+  order       Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  itineraryDays  ItineraryDay[]
+  inclusions     PackageInclusion[]
+  highlights     PackageHighlight[]
+}
+
+// Day-by-day itinerary. `details` is free-form text (not a structured
+// timeline sub-table) — far simpler for admin data entry than replicating
+// the live site's rigid timeline UI.
+model ItineraryDay {
+  id        String  @id @default(cuid())
+  packageId String
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  dayNumber Int
+  title     String
+  summary   String
+  details   String
+  order     Int     @default(0)
+
+  @@index([packageId])
+}
+
+model PackageInclusion {
+  id        String  @id @default(cuid())
+  packageId String
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  text      String
+  order     Int     @default(0)
+
+  @@index([packageId])
+}
+
+model PackageHighlight {
+  id        String  @id @default(cuid())
+  packageId String
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  text      String
+  order     Int     @default(0)
+
+  @@index([packageId])
+}
+
+// "Featured Temples" carousel — specific destinations, distinct from the
+// 3 broad Category pillars (Temple Tourism / Adventure / Wellness).
+model Destination {
+  id       String  @id @default(cuid())
+  name     String
+  location String
+  imageUrl String?
+  order    Int     @default(0)
+}
+
+// Covers both homepage value-prop sections ("The Sanchari Way" and the
+// 4-step "Process") via the `section` discriminator, rather than two
+// near-identical tables.
+model ValueProp {
+  id          String @id @default(cuid())
+  section     String
+  title       String
+  description String
+  order       Int    @default(0)
+}
+
+model Faq {
+  id       String @id @default(cuid())
+  question String
+  answer   String
+  order    Int    @default(0)
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
   createdAt DateTime @default(now())
 }

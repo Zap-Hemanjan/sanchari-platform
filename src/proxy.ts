@@ -21,9 +21,15 @@ export const config = {
   matcher: [
     "/admin",
     "/admin/hero",
+    "/admin/settings",
     "/admin/categories/:path*",
+    "/admin/packages/:path*",
+    "/admin/destinations/:path*",
+    "/admin/value-props/:path*",
     "/admin/testimonials/:path*",
+    "/admin/faqs/:path*",
     "/admin/gallery",
     "/admin/inquiries",
+    "/admin/newsletter",
   ],
 };
