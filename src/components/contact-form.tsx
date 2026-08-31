@@ -47,7 +47,7 @@ export function ContactForm() {
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none"
+          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
         />
       </div>
       <div>
@@ -60,7 +60,7 @@ export function ContactForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none"
+          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
         />
       </div>
       <div>
@@ -73,7 +73,7 @@ export function ContactForm() {
           rows={4}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none"
+          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
         />
       </div>
       {status === "error" && (
