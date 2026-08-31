@@ -1,101 +1,148 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+// Content is admin-managed and must reflect edits immediately — without
+// this, Next would statically prerender this page at build time and freeze
+// whatever was in the database when `next build` ran.
+export const dynamic = "force-dynamic";
+import { getSiteSettings } from "@/lib/content/hero";
+import { listCategories } from "@/lib/content/categories";
+import { listTestimonials } from "@/lib/content/testimonials";
+import { listMedia } from "@/lib/content/media";
+import { ContactForm } from "@/components/contact-form";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+const DEFAULT_HEADLINE = "Discover the Soul of South India";
+const DEFAULT_SUBHEADLINE =
+  "Curated temple circuits, adventure escapes and wellness retreats across South India.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const headline = settings?.heroHeadline ?? DEFAULT_HEADLINE;
+  const description = settings?.heroSubheadline ?? DEFAULT_SUBHEADLINE;
+
+  return {
+    title: headline,
+    description,
+    openGraph: {
+      title: headline,
+      description,
+      images: settings?.heroImageUrl ? [settings.heroImageUrl] : undefined,
+    },
+  };
+}
+
+export default async function HomePage() {
+  const [settings, categories, testimonials, media] = await Promise.all([
+    getSiteSettings(),
+    listCategories(),
+    listTestimonials({ publishedOnly: true }),
+    listMedia(),
+  ]);
+
+  const headline = settings?.heroHeadline ?? DEFAULT_HEADLINE;
+  const subheadline = settings?.heroSubheadline ?? DEFAULT_SUBHEADLINE;
+
+  return (
+    <main>
+      <section className="relative flex min-h-[70vh] flex-col items-center justify-center bg-emerald-900 px-4 py-24 text-center text-white sm:px-6">
+        {settings?.heroImageUrl && (
+          <Image
+            src={settings.heroImageUrl}
+            alt=""
+            fill
+            priority
+            unoptimized
+            className="object-cover opacity-40"
+          />
+        )}
+        <div className="relative max-w-2xl">
+          <h1 className="text-3xl font-bold sm:text-5xl">{headline}</h1>
+          <p className="mt-4 text-base text-emerald-50 sm:text-lg">{subheadline}</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      {categories.length > 0 && (
+        <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+          <h2 className="mb-8 text-center text-2xl font-semibold text-slate-900">
+            Our Core Categories
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                className="rounded-lg border border-slate-200 p-6 text-center"
+              >
+                {category.imageUrl && (
+                  <div className="relative mx-auto mb-4 h-32 w-full overflow-hidden rounded">
+                    <Image
+                      src={category.imageUrl}
+                      alt={category.title}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <h3 className="font-medium text-emerald-800">{category.title}</h3>
+                <p className="mt-2 text-sm text-slate-600">{category.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {testimonials.length > 0 && (
+        <section className="bg-slate-50 px-4 py-16 sm:px-6">
+          <h2 className="mb-8 text-center text-2xl font-semibold text-slate-900">
+            What Travelers Say
+          </h2>
+          <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
+            {testimonials.map((testimonial) => (
+              <blockquote
+                key={testimonial.id}
+                className="rounded-lg bg-white p-6 shadow-sm"
+              >
+                <p className="text-slate-700">&ldquo;{testimonial.quote}&rdquo;</p>
+                <footer className="mt-3 text-sm font-medium text-emerald-800">
+                  {testimonial.name}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {media.length > 0 && (
+        <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+          <h2 className="mb-8 text-center text-2xl font-semibold text-slate-900">
+            Gallery
+          </h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+            {media.slice(0, 8).map((item) => (
+              <div key={item.id} className="relative aspect-square overflow-hidden rounded">
+                <Image
+                  src={item.url}
+                  alt={item.altText}
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="bg-emerald-900 px-4 py-16 text-center text-white sm:px-6">
+        <h2 className="mb-4 text-2xl font-semibold">Plan Your Journey</h2>
+        <p className="mx-auto mb-8 max-w-md text-emerald-50">
+          Ready to book, or need a custom itinerary? Tell us a little about
+          your trip and we&apos;ll call you back within 24 hours.
+        </p>
+        <div className="rounded-lg bg-white p-6">
+          <ContactForm />
+        </div>
+      </section>
+    </main>
   );
 }

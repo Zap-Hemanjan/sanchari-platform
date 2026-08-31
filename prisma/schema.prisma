@@ -1,0 +1,114 @@
+// Schema uses only portable types (String, Int, Boolean, DateTime) and no
+// `enum` blocks — SQLite (used for local dev/test) cannot represent Prisma
+// enums. Role/status fields are plain String with app-level validation so
+// this schema runs unmodified against Postgres in production too.
+//
+// IMPORTANT: SQLite and Postgres migration history are NOT interchangeable.
+// The first production deploy deletes this folder's generated migrations,
+// points DATABASE_URL at Postgres, and runs `prisma migrate dev --name init`
+// fresh. See README.md.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions      Session[]
+  resetTokens   PasswordResetToken[]
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  tokenHash   String   @unique
+  adminUserId String
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([adminUserId])
+}
+
+model PasswordResetToken {
+  id          String    @id @default(cuid())
+  tokenHash   String    @unique
+  adminUserId String
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([adminUserId])
+}
+
+// Tracks both login and forgot-password attempts for DB-backed rate limiting
+// (in-memory counters don't survive serverless cold starts). `identifier` is
+// an email address or IP address depending on which endpoint recorded it.
+model LoginAttempt {
+  id          String   @id @default(cuid())
+  identifier  String
+  success     Boolean
+  attemptedAt DateTime @default(now())
+
+  @@index([identifier, attemptedAt])
+}
+
+// Singleton row (id is always "singleton") holding homepage hero content.
+model SiteSettings {
+  id              String @id @default("singleton")
+  heroHeadline    String
+  heroSubheadline String
+  heroImageUrl    String?
+  updatedAt       DateTime @updatedAt
+}
+
+// The 3 pillars: Temple Tourism / Adventure / Wellness.
+model Category {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String?
+  order       Int    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  quote     String
+  imageUrl  String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  url       String
+  altText   String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}
