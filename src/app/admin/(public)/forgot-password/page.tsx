@@ -25,7 +25,7 @@ export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-sm rounded-lg border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="mb-6 text-xl font-semibold text-emerald-800">
+        <h1 className="mb-6 text-xl font-semibold text-navy-dark">
           Reset your password
         </h1>
 
@@ -46,13 +46,13 @@ export default function ForgotPasswordPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
+                className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-navy focus:outline-none"
               />
             </div>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded bg-emerald-700 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+              className="w-full rounded bg-navy px-3 py-2 text-sm font-medium text-white hover:bg-navy-dark disabled:opacity-50"
             >
               {isSubmitting ? "Sending..." : "Send reset link"}
             </button>
@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
 
         <Link
           href="/admin/login"
-          className="mt-4 block text-center text-sm text-emerald-700 hover:underline"
+          className="mt-4 block text-center text-sm text-navy hover:underline"
         >
           Back to login
         </Link>

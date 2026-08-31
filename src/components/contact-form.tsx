@@ -30,7 +30,7 @@ export function ContactForm() {
 
   if (status === "sent") {
     return (
-      <p className="rounded-lg bg-emerald-50 p-4 text-emerald-800">
+      <p className="rounded-lg bg-navy/5 p-4 text-navy">
         Thanks — we&apos;ll get back to you within 24 hours.
       </p>
     );
@@ -47,7 +47,7 @@ export function ContactForm() {
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
+          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-navy focus:outline-none"
         />
       </div>
       <div>
@@ -60,7 +60,7 @@ export function ContactForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
+          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-navy focus:outline-none"
         />
       </div>
       <div>
@@ -73,7 +73,7 @@ export function ContactForm() {
           rows={4}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
+          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-navy focus:outline-none"
         />
       </div>
       {status === "error" && (
@@ -84,9 +84,13 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full rounded bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50 sm:w-auto"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-medium text-white transition hover:bg-terracotta-dark disabled:opacity-50 sm:w-auto"
       >
-        {status === "submitting" ? "Sending..." : "Send inquiry"}
+        {status === "submitting" ? "Sending..." : (
+          <>
+            Send inquiry <span aria-hidden>&rarr;</span>
+          </>
+        )}
       </button>
     </form>
   );

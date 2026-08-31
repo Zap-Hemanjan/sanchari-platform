@@ -51,7 +51,7 @@ export function HeroForm({
           required
           value={heroHeadline}
           onChange={(e) => setHeroHeadline(e.target.value)}
-          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
+          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-navy focus:outline-none"
         />
       </div>
       <div>
@@ -63,7 +63,7 @@ export function HeroForm({
           value={heroSubheadline}
           onChange={(e) => setHeroSubheadline(e.target.value)}
           rows={3}
-          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none"
+          className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-navy focus:outline-none"
         />
       </div>
       <ImageUploadField
@@ -71,11 +71,11 @@ export function HeroForm({
         value={heroImageUrl}
         onChange={setHeroImageUrl}
       />
-      {message && <p className="text-sm text-emerald-700">{message}</p>}
+      {message && <p className="text-sm text-navy">{message}</p>}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50"
+        className="rounded bg-navy px-4 py-2 text-sm font-medium text-white hover:bg-navy-dark disabled:opacity-50"
       >
         {isSubmitting ? "Saving..." : "Save"}
       </button>

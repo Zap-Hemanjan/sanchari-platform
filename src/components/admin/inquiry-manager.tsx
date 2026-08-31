@@ -47,7 +47,7 @@ export function InquiryManager({ initialInquiries }: { initialInquiries: Inquiry
               <button
                 type="button"
                 onClick={() => markRead(inquiry.id)}
-                className="text-sm text-emerald-700 hover:underline"
+                className="text-sm text-navy hover:underline"
               >
                 Mark read
               </button>

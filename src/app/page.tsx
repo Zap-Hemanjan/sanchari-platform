@@ -31,6 +31,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-terracotta">
+      {children}
+    </p>
+  );
+}
+
 export default async function HomePage() {
   const [settings, categories, testimonials, media] = await Promise.all([
     getSiteSettings(),
@@ -44,7 +52,7 @@ export default async function HomePage() {
 
   return (
     <main>
-      <section className="relative flex min-h-[70vh] flex-col items-center justify-center bg-emerald-900 px-4 py-24 text-center text-white sm:px-6">
+      <section className="relative flex min-h-[70vh] flex-col items-center justify-center bg-navy px-4 py-24 text-center text-white sm:px-6">
         {settings?.heroImageUrl && (
           <Image
             src={settings.heroImageUrl}
@@ -56,35 +64,45 @@ export default async function HomePage() {
           />
         )}
         <div className="relative max-w-2xl">
-          <h1 className="text-3xl font-bold sm:text-5xl">{headline}</h1>
-          <p className="mt-4 text-base text-emerald-50 sm:text-lg">{subheadline}</p>
+          <h1 className="font-serif text-4xl leading-tight sm:text-6xl">{headline}</h1>
+          <p className="mt-4 text-base text-white/80 sm:text-lg">{subheadline}</p>
+          <a
+            href="#plan-your-journey"
+            className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-navy transition hover:bg-white/90"
+          >
+            Begin Your Journey <span aria-hidden>&rarr;</span>
+          </a>
         </div>
       </section>
 
       {categories.length > 0 && (
-        <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-          <h2 className="mb-8 text-center text-2xl font-semibold text-slate-900">
-            Our Core Categories
+        <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
+          <Eyebrow>Discover Divine Tours</Eyebrow>
+          <h2 className="mb-10 text-center font-serif text-3xl text-terracotta sm:text-4xl">
+            Find the Journey Meant for You
           </h2>
           <div className="grid gap-6 sm:grid-cols-3">
             {categories.map((category) => (
               <div
                 key={category.id}
-                className="rounded-lg border border-slate-200 p-6 text-center"
+                className="group relative h-72 overflow-hidden rounded-2xl"
               >
-                {category.imageUrl && (
-                  <div className="relative mx-auto mb-4 h-32 w-full overflow-hidden rounded">
-                    <Image
-                      src={category.imageUrl}
-                      alt={category.title}
-                      fill
-                      unoptimized
-                      className="object-cover"
-                    />
-                  </div>
+                {category.imageUrl ? (
+                  <Image
+                    src={category.imageUrl}
+                    alt={category.title}
+                    fill
+                    unoptimized
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-navy to-terracotta" />
                 )}
-                <h3 className="font-medium text-emerald-800">{category.title}</h3>
-                <p className="mt-2 text-sm text-slate-600">{category.description}</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-6 text-left">
+                  <h3 className="font-serif text-xl text-white">{category.title}</h3>
+                  <p className="mt-2 text-sm text-white/85">{category.description}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -92,18 +110,19 @@ export default async function HomePage() {
       )}
 
       {testimonials.length > 0 && (
-        <section className="bg-slate-50 px-4 py-16 sm:px-6">
-          <h2 className="mb-8 text-center text-2xl font-semibold text-slate-900">
+        <section className="bg-slate-50 px-4 py-20 sm:px-6">
+          <Eyebrow>Traveler Stories</Eyebrow>
+          <h2 className="mb-10 text-center font-serif text-3xl text-terracotta sm:text-4xl">
             What Travelers Say
           </h2>
           <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
             {testimonials.map((testimonial) => (
               <blockquote
                 key={testimonial.id}
-                className="rounded-lg bg-white p-6 shadow-sm"
+                className="rounded-2xl bg-white p-6 shadow-sm"
               >
                 <p className="text-slate-700">&ldquo;{testimonial.quote}&rdquo;</p>
-                <footer className="mt-3 text-sm font-medium text-emerald-800">
+                <footer className="mt-3 text-sm font-medium text-navy">
                   {testimonial.name}
                 </footer>
               </blockquote>
@@ -113,13 +132,14 @@ export default async function HomePage() {
       )}
 
       {media.length > 0 && (
-        <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-          <h2 className="mb-8 text-center text-2xl font-semibold text-slate-900">
-            Gallery
+        <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
+          <Eyebrow>Gallery</Eyebrow>
+          <h2 className="mb-10 text-center font-serif text-3xl text-terracotta sm:text-4xl">
+            Moments From the Journey
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
             {media.slice(0, 8).map((item) => (
-              <div key={item.id} className="relative aspect-square overflow-hidden rounded">
+              <div key={item.id} className="relative aspect-square overflow-hidden rounded-xl">
                 <Image
                   src={item.url}
                   alt={item.altText}
@@ -133,13 +153,16 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="bg-emerald-900 px-4 py-16 text-center text-white sm:px-6">
-        <h2 className="mb-4 text-2xl font-semibold">Plan Your Journey</h2>
-        <p className="mx-auto mb-8 max-w-md text-emerald-50">
+      <section
+        id="plan-your-journey"
+        className="bg-navy px-4 py-20 text-center text-white sm:px-6"
+      >
+        <h2 className="mb-4 font-serif text-3xl sm:text-4xl">Plan Your Journey</h2>
+        <p className="mx-auto mb-8 max-w-md text-white/80">
           Ready to book, or need a custom itinerary? Tell us a little about
           your trip and we&apos;ll call you back within 24 hours.
         </p>
-        <div className="rounded-lg bg-white p-6">
+        <div className="mx-auto max-w-lg rounded-2xl bg-white p-6 sm:p-8">
           <ContactForm />
         </div>
       </section>

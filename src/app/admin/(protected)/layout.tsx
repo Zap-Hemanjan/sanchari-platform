@@ -34,14 +34,14 @@ export default async function AdminLayout({
       <div className="flex min-h-screen flex-col md:flex-row">
         <aside className="border-b border-slate-200 bg-white md:w-56 md:border-b-0 md:border-r">
           <div className="p-4">
-            <p className="font-semibold text-emerald-800">Sanchari Admin</p>
+            <p className="font-semibold text-navy-dark">Sanchari Admin</p>
           </div>
           <nav className="flex flex-row flex-wrap gap-1 px-2 pb-4 md:flex-col">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded px-3 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-800"
+                className="rounded px-3 py-2 text-sm text-slate-700 hover:bg-navy/5 hover:text-navy-dark"
               >
                 {item.label}
               </Link>
