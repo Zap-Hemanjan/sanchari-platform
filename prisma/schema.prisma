@@ -95,6 +95,8 @@ model Category {
   order       Int    @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  packages Package[]
 }
 
 model Testimonial {
@@ -145,9 +147,18 @@ model Package {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Which of the 3 pillars (Temple Tourism / Adventure / Wellness) this
+  // package belongs to. Nullable so existing/imported packages aren't
+  // forced to pick one immediately, but every package shown on the public
+  // site should have one set — otherwise it can't be grouped correctly.
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
   itineraryDays  ItineraryDay[]
   inclusions     PackageInclusion[]
   highlights     PackageHighlight[]
+
+  @@index([categoryId])
 }
 
 // Day-by-day itinerary. `details` is free-form text (not a structured

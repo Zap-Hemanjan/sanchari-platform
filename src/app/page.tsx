@@ -88,6 +88,13 @@ export default async function HomePage() {
     settings?.statsDestinations != null ||
     settings?.statsSatisfaction != null;
 
+  // Picks up to 2 packages per category so the homepage showcase represents
+  // all 3 pillars, rather than whichever packages happen to be seeded/
+  // ordered first (which skewed entirely temple before this fix).
+  const showcasePackages = categories.flatMap((category) =>
+    packages.filter((pkg) => pkg.categoryId === category.id).slice(0, 2),
+  );
+
   return (
     <>
       <SiteHeader />
@@ -141,14 +148,14 @@ export default async function HomePage() {
           </section>
         )}
 
-        {packages.length > 0 && (
+        {showcasePackages.length > 0 && (
           <section className="bg-slate-50 px-4 py-20 sm:px-6">
-            <Eyebrow>Spiritual Escapes</Eyebrow>
+            <Eyebrow>Curated Journeys</Eyebrow>
             <h2 className="mb-10 text-center font-serif text-3xl text-terracotta sm:text-4xl">
-              Top Temple Tour Packages
+              Top Tour Packages
             </h2>
             <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 md:grid-cols-3">
-              {packages.slice(0, 6).map((pkg) => (
+              {showcasePackages.map((pkg) => (
                 <Link
                   key={pkg.id}
                   href={`/trip/${pkg.slug}`}

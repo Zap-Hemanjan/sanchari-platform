@@ -9,7 +9,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: "A new vision for sacred travel across South India.",
+  description:
+    "A new vision for travel across South India — temple circuits, adventure escapes and wellness retreats.",
 };
 
 function Stat({ value, label }: { value: string; label: string }) {
@@ -45,8 +46,14 @@ export default async function AboutUsPage() {
           <p className="mt-4 text-slate-700">
             India&apos;s temples are not merely destinations — they are living cultural spaces,
             carrying centuries of faith, art and tradition. Sanchari was born from a vision to
-            transform temple tourism, curating journeys where travellers are free to focus on
-            what brought them there.
+            transform South Indian travel, curating journeys where travellers are free to focus
+            on what brought them there.
+          </p>
+          <p className="mt-4 text-slate-700">
+            That vision spans three pillars: comprehensive <strong>Temple Tourism</strong>{" "}
+            circuits, high-energy <strong>Adventure Experiences</strong> across the Western
+            Ghats and coastline, and immersive <strong>Wellness &amp; Activities</strong>{" "}
+            retreats rooted in traditional Kerala Ayurveda and yoga.
           </p>
           <p className="mt-4 text-sm text-slate-500">
             Our founder brings vision, trust and cultural ambition to Sanchari — a creative force

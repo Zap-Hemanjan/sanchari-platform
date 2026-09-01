@@ -19,6 +19,7 @@ export const packageInputSchema = z.object({
   destination: z.string().trim().min(1, "Destination is required"),
   heroImageUrl: z.string().url().nullish(),
   description: z.string().trim().min(1, "Description is required"),
+  categoryId: z.string().trim().min(1).nullish(),
   published: z.boolean().default(true),
   order: z.number().int().default(0),
   highlights: z.array(z.string().trim().min(1)).default([]),
@@ -32,6 +33,7 @@ const PACKAGE_INCLUDE = {
   itineraryDays: { orderBy: { order: "asc" as const } },
   highlights: { orderBy: { order: "asc" as const } },
   inclusions: { orderBy: { order: "asc" as const } },
+  category: true,
 };
 
 function toNestedCreate(
@@ -50,9 +52,15 @@ function toNestedCreate(
   };
 }
 
-export async function listPackages(options: { publishedOnly?: boolean } = {}) {
+export async function listPackages(
+  options: { publishedOnly?: boolean; categoryId?: string } = {},
+) {
   return prisma.package.findMany({
-    where: options.publishedOnly ? { published: true } : undefined,
+    where: {
+      ...(options.publishedOnly ? { published: true } : {}),
+      ...(options.categoryId ? { categoryId: options.categoryId } : {}),
+    },
+    include: { category: true },
     orderBy: { order: "asc" },
   });
 }

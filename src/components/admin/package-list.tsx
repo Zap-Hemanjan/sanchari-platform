@@ -10,6 +10,7 @@ type PackageRow = {
   duration: string;
   destination: string;
   published: boolean;
+  category: { title: string } | null;
 };
 
 export function PackageList({ initialPackages }: { initialPackages: PackageRow[] }) {
@@ -38,6 +39,9 @@ export function PackageList({ initialPackages }: { initialPackages: PackageRow[]
             </p>
             <p className="text-sm text-slate-600">
               {pkg.duration} · {pkg.destination}
+              {pkg.category ? ` · ${pkg.category.title}` : (
+                <span className="text-red-500"> · No category set</span>
+              )}
             </p>
           </div>
           <div className="flex gap-4">

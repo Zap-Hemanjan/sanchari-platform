@@ -13,6 +13,7 @@ type PackageFormValues = {
   destination: string;
   heroImageUrl: string | null;
   description: string;
+  categoryId: string | null;
   published: boolean;
   highlights: string[];
   inclusions: string[];
@@ -26,6 +27,7 @@ const EMPTY: PackageFormValues = {
   destination: "",
   heroImageUrl: null,
   description: "",
+  categoryId: null,
   published: true,
   highlights: [],
   inclusions: [],
@@ -87,10 +89,12 @@ export function PackageForm({
   mode,
   packageId,
   initial,
+  categories,
 }: {
   mode: "create" | "edit";
   packageId?: string;
   initial?: PackageFormValues;
+  categories: { id: string; title: string }[];
 }) {
   const router = useRouter();
   const [values, setValues] = useState<PackageFormValues>(initial ?? EMPTY);
@@ -184,6 +188,26 @@ export function PackageForm({
               onChange={(e) => update("destination", e.target.value)}
               className={inputClass}
             />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-700">
+              Category (one of the 3 pillars)
+            </label>
+            <select
+              required
+              value={values.categoryId ?? ""}
+              onChange={(e) => update("categoryId", e.target.value || null)}
+              className={inputClass}
+            >
+              <option value="" disabled>
+                Select a category
+              </option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.title}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div>

@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterAll } from "vitest";
+import { prisma } from "@/lib/prisma";
 import { resetDb } from "../helpers/db";
 import {
   listPackages,
@@ -95,5 +96,25 @@ describe("package content repository", () => {
     await expect(
       createPackage(samplePackage({ title: "" })),
     ).rejects.toThrow();
+  });
+
+  it("links a package to a category and can filter the listing by it", async () => {
+    const temple = await prisma.category.create({
+      data: { title: "Temple Tourism", description: "D" },
+    });
+    const adventure = await prisma.category.create({
+      data: { title: "Adventure Experiences", description: "D" },
+    });
+
+    await createPackage(samplePackage({ categoryId: temple.id }));
+    await createPackage(
+      samplePackage({ slug: "adventure-trip", title: "Adventure Trip", categoryId: adventure.id }),
+    );
+
+    const templePackages = await listPackages({ categoryId: temple.id });
+    expect(templePackages.map((p) => p.title)).toEqual(["Tamil Nadu Temple Journey"]);
+
+    const full = await getPackageBySlug("tamil-nadu-temple-journey");
+    expect(full?.category?.title).toBe("Temple Tourism");
   });
 });

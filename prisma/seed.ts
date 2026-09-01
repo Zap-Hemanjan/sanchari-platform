@@ -3,18 +3,22 @@ import { hashPassword } from "../src/lib/password";
 
 const prisma = new PrismaClient();
 
-// 12 real package names/durations/destinations, scraped from the live
-// sanchari.travel /our-packages/ listing. Only "Tamil Nadu Temple Journey"
-// has a verified real itinerary (from its live detail page) — the rest seed
-// with just the listing fields, ready for Pranay to fill in via
-// /admin/packages. Fabricating itineraries for packages we haven't verified
-// would be dishonest filler.
+// The live sanchari.travel site currently only has temple packages
+// published — no Adventure or Wellness packages exist there yet, even
+// though the original WRD calls for all 3 pillars equally. Copying the live
+// site's current imbalance would misrepresent your actual business — so the
+// 12 real temple packages (scraped from the live listing; only "Tamil Nadu
+// Temple Journey" has a verified real itinerary) are tagged "temple", and 4
+// starter Adventure/Wellness packages are added so all 3 pillars are
+// represented. Those 4 are honestly generic (no fabricated day-by-day
+// itinerary) — ready for Pranay to flesh out via /admin/packages.
 const PACKAGES: Array<{
   slug: string;
   title: string;
   duration: string;
   destination: string;
   description: string;
+  pillar: "temple" | "adventure" | "wellness";
   highlights: string[];
   inclusions: string[];
   itinerary: { title: string; summary: string; details: string }[];
@@ -24,6 +28,7 @@ const PACKAGES: Array<{
     title: "Tamil Nadu Temple Journey",
     duration: "7 Days 6 Nights",
     destination: "Tamil Nadu",
+    pillar: "temple",
     description:
       "From Adiyogi's luminous presence at the Isha Yoga Center, through twelve divine abodes across Tamil Nadu, this journey blends devotion, heritage and comfort across a week of temple darshan.",
     highlights: [
@@ -83,6 +88,7 @@ const PACKAGES: Array<{
     title: "Sacred Karnataka",
     duration: "6 Days",
     destination: "Karnataka",
+    pillar: "temple",
     description: "A pilgrimage circuit through Karnataka's most revered temple towns.",
     highlights: [],
     inclusions: [],
@@ -93,6 +99,7 @@ const PACKAGES: Array<{
     title: "Sacred Telangana",
     duration: "5 Days",
     destination: "Telangana",
+    pillar: "temple",
     description: "Temple circuit covering Telangana's most significant pilgrimage sites.",
     highlights: [],
     inclusions: [],
@@ -103,6 +110,7 @@ const PACKAGES: Array<{
     title: "Sacred Andhra Pradesh",
     duration: "6 Days",
     destination: "Andhra Pradesh",
+    pillar: "temple",
     description: "A journey through Andhra Pradesh's sacred temple towns.",
     highlights: [],
     inclusions: [],
@@ -113,6 +121,7 @@ const PACKAGES: Array<{
     title: "Heritage Tamil Nadu",
     duration: "3 Days",
     destination: "Tamil Nadu",
+    pillar: "temple",
     description: "A short heritage and temple circuit through Tamil Nadu.",
     highlights: [],
     inclusions: [],
@@ -123,6 +132,7 @@ const PACKAGES: Array<{
     title: "Sacred Tamil Nadu",
     duration: "4 Days",
     destination: "Tamil Nadu",
+    pillar: "temple",
     description: "A focused pilgrimage circuit through Tamil Nadu's temple towns.",
     highlights: [],
     inclusions: [],
@@ -133,6 +143,7 @@ const PACKAGES: Array<{
     title: "Sacred Kerala 3",
     duration: "4 Days",
     destination: "Kerala",
+    pillar: "temple",
     description: "One of Sanchari's Kerala temple circuit variants.",
     highlights: [],
     inclusions: [],
@@ -143,6 +154,7 @@ const PACKAGES: Array<{
     title: "Sacred Kerala 2",
     duration: "4 Days",
     destination: "Kerala",
+    pillar: "temple",
     description: "One of Sanchari's Kerala temple circuit variants.",
     highlights: [],
     inclusions: [],
@@ -153,6 +165,7 @@ const PACKAGES: Array<{
     title: "Sacred Kerala",
     duration: "7 Days",
     destination: "Kerala",
+    pillar: "temple",
     description: "A comprehensive week-long temple circuit across Kerala.",
     highlights: [],
     inclusions: [],
@@ -163,7 +176,59 @@ const PACKAGES: Array<{
     title: "Karnataka Coastal Temple Circuit",
     duration: "4 Days",
     destination: "Karnataka",
+    pillar: "temple",
     description: "A coastal Karnataka circuit covering temples along the Arabian Sea.",
+    highlights: [],
+    inclusions: [],
+    itinerary: [],
+  },
+  // Starter Adventure and Wellness packages — generic on purpose (no
+  // fabricated itinerary), so the site represents all 3 pillars from the
+  // WRD rather than only the temple content the live site currently has.
+  {
+    slug: "western-ghats-trekking-circuit",
+    title: "Western Ghats Trekking Circuit",
+    duration: "4 Days",
+    destination: "Karnataka / Kerala",
+    pillar: "adventure",
+    description:
+      "A high-energy circuit through the Western Ghats — trekking trails, waterfalls and viewpoints across the hill ranges of Karnataka and Kerala.",
+    highlights: [],
+    inclusions: [],
+    itinerary: [],
+  },
+  {
+    slug: "coastal-wildlife-and-water-sports",
+    title: "Coastal Wildlife & Water Sports",
+    duration: "5 Days",
+    destination: "Kerala",
+    pillar: "adventure",
+    description:
+      "Backwaters, coastline and wildlife — a package built around water sports and wildlife safaris for groups looking for an active getaway.",
+    highlights: [],
+    inclusions: [],
+    itinerary: [],
+  },
+  {
+    slug: "kerala-ayurveda-retreat",
+    title: "Kerala Ayurveda Retreat",
+    duration: "5 Days",
+    destination: "Kerala",
+    pillar: "wellness",
+    description:
+      "An immersive retreat centred on traditional Kerala Ayurvedic treatments, in a calm backwater or hill setting.",
+    highlights: [],
+    inclusions: [],
+    itinerary: [],
+  },
+  {
+    slug: "yoga-and-wellness-escape",
+    title: "Yoga & Wellness Escape",
+    duration: "3 Days",
+    destination: "Tamil Nadu",
+    pillar: "wellness",
+    description:
+      "A short escape built around yoga practice and mindfulness, anchored around Coimbatore's wellness centres.",
     highlights: [],
     inclusions: [],
     itinerary: [],
@@ -338,35 +403,52 @@ async function main() {
 
   const settings = await prisma.siteSettings.findUnique({ where: { id: "singleton" } });
 
-  const packageCount = await prisma.package.count();
-  if (packageCount === 0) {
-    for (const [index, pkg] of PACKAGES.entries()) {
-      await prisma.package.create({
-        data: {
-          slug: pkg.slug,
-          title: pkg.title,
-          duration: pkg.duration,
-          destination: pkg.destination,
-          description: pkg.description,
-          // The one fully-detailed package reuses the real Brihadeeswarar
-          // Temple hero photo already set as the homepage hero image.
-          heroImageUrl: pkg.slug === "tamil-nadu-temple-journey" ? settings?.heroImageUrl : null,
-          published: true,
-          order: index,
-          highlights: { create: pkg.highlights.map((text, order) => ({ text, order })) },
-          inclusions: { create: pkg.inclusions.map((text, order) => ({ text, order })) },
-          itineraryDays: {
-            create: pkg.itinerary.map((day, order) => ({
-              dayNumber: order + 1,
-              title: day.title,
-              summary: day.summary,
-              details: day.details,
-              order,
-            })),
-          },
+  const PILLAR_TO_CATEGORY_TITLE: Record<string, string> = {
+    temple: "Temple Tourism",
+    adventure: "Adventure Experiences",
+    wellness: "Wellness & Activities",
+  };
+  const allCategories = await prisma.category.findMany();
+  const categoryIdByTitle = new Map(allCategories.map((c) => [c.title, c.id]));
+
+  for (const [index, pkg] of PACKAGES.entries()) {
+    const categoryId = categoryIdByTitle.get(PILLAR_TO_CATEGORY_TITLE[pkg.pillar]) ?? null;
+    const scalars = {
+      title: pkg.title,
+      duration: pkg.duration,
+      destination: pkg.destination,
+      description: pkg.description,
+      categoryId,
+      // The one fully-detailed package reuses the real Brihadeeswarar
+      // Temple hero photo already set as the homepage hero image.
+      heroImageUrl: pkg.slug === "tamil-nadu-temple-journey" ? settings?.heroImageUrl : null,
+      published: true,
+      order: index,
+    };
+
+    // `update` only touches scalars (including backfilling categoryId on
+    // packages seeded before this field existed) — it deliberately never
+    // re-creates itinerary/highlights/inclusions, so re-running this
+    // script can't duplicate the Tamil Nadu package's real itinerary days.
+    await prisma.package.upsert({
+      where: { slug: pkg.slug },
+      update: scalars,
+      create: {
+        slug: pkg.slug,
+        ...scalars,
+        highlights: { create: pkg.highlights.map((text, order) => ({ text, order })) },
+        inclusions: { create: pkg.inclusions.map((text, order) => ({ text, order })) },
+        itineraryDays: {
+          create: pkg.itinerary.map((day, order) => ({
+            dayNumber: order + 1,
+            title: day.title,
+            summary: day.summary,
+            details: day.details,
+            order,
+          })),
         },
-      });
-    }
+      },
+    });
   }
 
   const valuePropCount = await prisma.valueProp.count();

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getPackageById } from "@/lib/content/packages";
+import { listCategories } from "@/lib/content/categories";
 import { PackageForm } from "@/components/admin/package-form";
 
 export default async function EditPackagePage({
@@ -8,7 +9,7 @@ export default async function EditPackagePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const pkg = await getPackageById(id);
+  const [pkg, categories] = await Promise.all([getPackageById(id), listCategories()]);
 
   if (!pkg) {
     notFound();
@@ -20,6 +21,7 @@ export default async function EditPackagePage({
       <PackageForm
         mode="edit"
         packageId={pkg.id}
+        categories={categories}
         initial={{
           slug: pkg.slug,
           title: pkg.title,
@@ -27,6 +29,7 @@ export default async function EditPackagePage({
           destination: pkg.destination,
           heroImageUrl: pkg.heroImageUrl,
           description: pkg.description,
+          categoryId: pkg.categoryId,
           published: pkg.published,
           highlights: pkg.highlights.map((h) => h.text),
           inclusions: pkg.inclusions.map((i) => i.text),
