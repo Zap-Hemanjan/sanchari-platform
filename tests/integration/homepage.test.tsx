@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { prisma } from "@/lib/prisma";
 import { resetDb } from "../helpers/db";
-import HomePage from "@/app/page";
+import HomePage from "@/app/(marketing)/page";
 
 describe("public homepage", () => {
   beforeEach(resetDb);

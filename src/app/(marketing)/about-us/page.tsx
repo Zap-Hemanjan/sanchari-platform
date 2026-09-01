@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { getSiteSettings } from "@/lib/content/hero";
 import { listValueProps } from "@/lib/content/value-props";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { EnquiryForm } from "@/components/enquiry-form";
 
 export const dynamic = "force-dynamic";
@@ -30,8 +28,6 @@ export default async function AboutUsPage() {
 
   return (
     <>
-      <SiteHeader />
-      <main>
         <section className="bg-navy px-4 py-16 text-center text-white sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
             Home &gt; About Us
@@ -106,8 +102,6 @@ export default async function AboutUsPage() {
             <EnquiryForm />
           </div>
         </section>
-      </main>
-      <SiteFooter />
     </>
   );
 }

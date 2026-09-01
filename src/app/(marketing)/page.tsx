@@ -14,8 +14,6 @@ import { listPackages } from "@/lib/content/packages";
 import { listDestinations } from "@/lib/content/destinations";
 import { listValueProps } from "@/lib/content/value-props";
 import { EnquiryForm } from "@/components/enquiry-form";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 import { DestinationsCarousel } from "@/components/destinations-carousel";
@@ -97,8 +95,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <SiteHeader />
-      <main id="top">
         <section className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden bg-navy px-4 py-24 text-center text-white sm:px-6">
           <HeroCarousel images={heroImages} />
           <div className="absolute inset-0 bg-navy/60" />
@@ -305,8 +301,6 @@ export default async function HomePage() {
             <EnquiryForm />
           </div>
         </section>
-      </main>
-      <SiteFooter />
     </>
   );
 }

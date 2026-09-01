@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getPackageBySlug } from "@/lib/content/packages";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { EnquiryForm } from "@/components/enquiry-form";
 
 export const dynamic = "force-dynamic";
@@ -43,8 +41,6 @@ export default async function TripDetailPage({
 
   return (
     <>
-      <SiteHeader />
-      <main>
         <section className="relative flex min-h-[45vh] flex-col items-center justify-center overflow-hidden bg-navy px-4 py-16 text-center text-white sm:px-6">
           {pkg.heroImageUrl && (
             <Image
@@ -135,8 +131,6 @@ export default async function TripDetailPage({
             </div>
           </aside>
         </section>
-      </main>
-      <SiteFooter />
     </>
   );
 }

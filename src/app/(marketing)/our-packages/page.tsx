@@ -4,8 +4,6 @@ import Link from "next/link";
 import { listPackages } from "@/lib/content/packages";
 import { listCategories } from "@/lib/content/categories";
 import { listFaqs } from "@/lib/content/faqs";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 
 export const dynamic = "force-dynamic";
 
@@ -57,8 +55,6 @@ export default async function OurPackagesPage() {
 
   return (
     <>
-      <SiteHeader />
-      <main>
         <section className="bg-navy px-4 py-16 text-center text-white sm:px-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
             Home &gt; Our Packages
@@ -130,8 +126,6 @@ export default async function OurPackagesPage() {
             </div>
           </section>
         )}
-      </main>
-      <SiteFooter />
     </>
   );
 }
