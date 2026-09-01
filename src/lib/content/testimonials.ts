@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { imageUrlSchema } from "@/lib/content/image-url";
 
 export const testimonialInputSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
   quote: z.string().trim().min(1, "Quote is required"),
-  imageUrl: z.string().url().nullish(),
+  imageUrl: imageUrlSchema.nullish(),
   order: z.number().int().default(0),
   published: z.boolean().default(true),
 });

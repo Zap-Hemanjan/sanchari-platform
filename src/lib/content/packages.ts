@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { imageUrlSchema } from "@/lib/content/image-url";
 
 const itineraryDayInputSchema = z.object({
   dayNumber: z.number().int(),
@@ -17,7 +18,7 @@ export const packageInputSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
   duration: z.string().trim().min(1, "Duration is required"),
   destination: z.string().trim().min(1, "Destination is required"),
-  heroImageUrl: z.string().url().nullish(),
+  heroImageUrl: imageUrlSchema.nullish(),
   description: z.string().trim().min(1, "Description is required"),
   categoryId: z.string().trim().min(1).nullish(),
   published: z.boolean().default(true),

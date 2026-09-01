@@ -41,4 +41,14 @@ describe("hero content repository", () => {
       updateHero({ heroHeadline: "", heroSubheadline: "Sub." }),
     ).rejects.toThrow();
   });
+
+  it("accepts a root-relative upload path as the hero image", async () => {
+    const result = await updateHero({
+      heroHeadline: "Discover the Soul of South India",
+      heroSubheadline: "Temples, adventure and wellness.",
+      heroImageUrl: "/uploads/some-file.webp",
+    });
+
+    expect(result.heroImageUrl).toBe("/uploads/some-file.webp");
+  });
 });

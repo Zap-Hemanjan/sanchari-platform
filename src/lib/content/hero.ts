@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { imageUrlSchema } from "@/lib/content/image-url";
 
 const SINGLETON_ID = "singleton";
 
 export const heroInputSchema = z.object({
   heroHeadline: z.string().trim().min(1, "Headline is required"),
   heroSubheadline: z.string().trim().min(1, "Subheadline is required"),
-  heroImageUrl: z.string().url().nullish(),
+  heroImageUrl: imageUrlSchema.nullish(),
 });
 
 export async function getSiteSettings() {

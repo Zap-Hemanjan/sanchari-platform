@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { imageUrlSchema } from "@/lib/content/image-url";
 
 export const categoryInputSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
   description: z.string().trim().min(1, "Description is required"),
-  imageUrl: z.string().url().nullish(),
+  imageUrl: imageUrlSchema.nullish(),
   order: z.number().int().default(0),
 });
 
